@@ -1,0 +1,13 @@
+fastapi 
+uvicorn 
+pymongo 
+motor 
+pydantic 
+bcrypt 
+jwt 
+python-multipart 
+transformers 
+reportlab 
+pandas 
+python-docx 
+PyPDF2
