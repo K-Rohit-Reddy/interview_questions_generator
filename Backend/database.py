@@ -6,10 +6,10 @@ import os
 load_dotenv()
 
 # Get MongoDB credentials from environment variables
-MONGO_USERNAME = os.getenv("MONGO_USERNAME").strip('"')
-MONGO_PASSWORD = os.getenv("MONGO_PASSWORD").strip('"')
-MONGO_CLUSTER = os.getenv("MONGO_CLUSTER").strip('"')
-DB_NAME = os.getenv("MONGO_DATABASE").strip('"')
+MONGO_USERNAME = os.getenv("MONGO_USERNAME")
+MONGO_PASSWORD = os.getenv("MONGO_PASSWORD")
+MONGO_CLUSTER = os.getenv("MONGO_CLUSTER")
+DB_NAME = os.getenv("MONGO_DATABASE")
 
 # Construct MongoDB URI using environment variables
 MONGO_URI = f"mongodb+srv://{MONGO_USERNAME}:{MONGO_PASSWORD}@{MONGO_CLUSTER}.mongodb.net/?retryWrites=true&w=majority"

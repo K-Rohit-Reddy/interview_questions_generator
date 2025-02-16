@@ -4,9 +4,12 @@ from routes.auth import router as auth_router
 from routes.questions import router as questions_router
 from routes.report import router as report_router
 from routes.history import router as history_router
-
+from dotenv import load_dotenv
+import os
 app = FastAPI()
 
+# Load environment variables from .env file
+load_dotenv()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  # Frontend origin
@@ -21,4 +24,4 @@ app.include_router(history_router, prefix="/history")
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(app, host="0.0.0.0", port=os.getenv("PORT"), reload=True)
