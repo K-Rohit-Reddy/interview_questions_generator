@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import config from '../config';
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -39,7 +40,8 @@ const QuestionForm = () => {
       formDataObj.append('interview_type', formData.interviewType);
       if (file) formDataObj.append('candidate_resume', file);
 
-      const response = await fetch('https://interviewquestionsgenerator-production.up.railway.app/questions/generate_questions', {
+      const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.questions.generate}`, {
+
 
         method: 'POST',
         body: formDataObj,

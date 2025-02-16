@@ -4,10 +4,10 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import InfoHeader from './InfoHeader';
 import { useNavigate } from 'react-router-dom';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import ReCAPTCHA from 'react-google-recaptcha';
 
-// Replace this with your actual hCaptcha site key
-const HCAPTCHA_SITE_KEY = '3a882fc2-5b92-4330-9e9a-01e47348d29c';
+// Replace this with your actual reCAPTCHA site key
+const RECAPTCHA_SITE_KEY = '6LdtRdkqAAAAALPaCtkcECR330pwY2PJj8jYRnDz';
 
 export const LoginForm = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
@@ -17,14 +17,14 @@ export const LoginForm = ({ onLoginSuccess }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [hcaptchaToken, setHcaptchaToken] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    if (!hcaptchaToken) {
+    if (!recaptchaToken) {
       setError('Please complete the captcha');
       setLoading(false);
       return;
@@ -34,7 +34,7 @@ export const LoginForm = ({ onLoginSuccess }) => {
       const formDataObj = new FormData();
       formDataObj.append('email', formData.email);
       formDataObj.append('password', formData.password);
-      formDataObj.append('hcaptcha_token', hcaptchaToken);
+      formDataObj.append('recaptcha_token', recaptchaToken);
 
       const response = await fetch('http://localhost:8000/auth/login', {
         method: 'POST',
@@ -113,16 +113,16 @@ export const LoginForm = ({ onLoginSuccess }) => {
                 />
               </div>
               <div className="flex justify-center my-4">
-                <HCaptcha
-                  sitekey={HCAPTCHA_SITE_KEY}
-                  onVerify={(token) => setHcaptchaToken(token)}
-                  onExpire={() => setHcaptchaToken('')}
+                <ReCAPTCHA
+                  sitekey={RECAPTCHA_SITE_KEY}
+                  onChange={(token) => setRecaptchaToken(token)}
+                  onExpired={() => setRecaptchaToken('')}
                 />
               </div>
               <Button
                 type="submit"
                 className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
-                disabled={loading || !hcaptchaToken}
+                disabled={loading || !recaptchaToken}
               >
                 {loading ? 'Processing...' : 'Login'}
               </Button>
@@ -157,7 +157,7 @@ export const SignupForm = ({ onSignupSuccess }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [hcaptchaToken, setHcaptchaToken] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState('');
 
   useEffect(() => {
     if (isSuccess) {
@@ -174,7 +174,7 @@ export const SignupForm = ({ onSignupSuccess }) => {
     setIsSuccess(false);
     setLoading(true);
 
-    if (!hcaptchaToken) {
+    if (!recaptchaToken) {
       setError('Please complete the captcha');
       setLoading(false);
       return;
@@ -188,7 +188,7 @@ export const SignupForm = ({ onSignupSuccess }) => {
       const formDataObj = new FormData();
       formDataObj.append('email', formData.email);
       formDataObj.append('password', formData.password);
-      formDataObj.append('hcaptcha_token', hcaptchaToken);
+      formDataObj.append('recaptcha_token', recaptchaToken);
 
       const response = await fetch('http://localhost:8000/auth/signup', {
         method: 'POST',
@@ -292,16 +292,16 @@ export const SignupForm = ({ onSignupSuccess }) => {
                 />
               </div>
               <div className="flex justify-center my-4">
-                <HCaptcha
-                  sitekey={HCAPTCHA_SITE_KEY}
-                  onVerify={(token) => setHcaptchaToken(token)}
-                  onExpire={() => setHcaptchaToken('')}
+                <ReCAPTCHA
+                  sitekey={RECAPTCHA_SITE_KEY}
+                  onChange={(token) => setRecaptchaToken(token)}
+                  onExpired={() => setRecaptchaToken('')}
                 />
               </div>
               <Button
                 type="submit"
                 className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
-                disabled={loading || formData.password !== formData.confirmPassword || !hcaptchaToken}
+                disabled={loading || formData.password !== formData.confirmPassword || !recaptchaToken}
               >
                 {loading ? 'Processing...' : 'Sign Up'}
               </Button>
