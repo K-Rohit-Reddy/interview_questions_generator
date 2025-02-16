@@ -74,3 +74,5 @@ async def generate_questions(
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        candidate_resume.file.close()
