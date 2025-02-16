@@ -30,9 +30,8 @@ const WorkflowDiagram = () => {
   ];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-16 bg-white">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-16">How It Works</h2>
         <div className="grid lg:grid-cols-4 gap-8 relative">
           {steps.map((step, index) => (
             <motion.div
@@ -42,7 +41,7 @@ const WorkflowDiagram = () => {
               transition={{ delay: index * 0.2 }}
               className="relative"
             >
-              <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="bg-white rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300">
                 <div className={`w-16 h-16 ${step.color} rounded-2xl text-white flex items-center justify-center text-3xl mb-4`}>
                   {step.icon}
                 </div>
