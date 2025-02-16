@@ -82,3 +82,53 @@ Type: {interview_type}
         return json.loads(raw_response)
     except Exception as e:
         raise Exception(f"Failed to generate questions: {str(e)}")
+
+async def calculate_matching_score(
+    job_requirements: dict,
+    candidate_profile: dict
+) -> dict:
+    """Calculate matching score with 3 key metrics using Groq"""
+    prompt = f"""
+<INSTRUCTIONS>
+Analyze ONLY these 3 match factors and return STRICTLY:
+1. overall_match: Percentage (0-100) of overall match
+2. skill_match: Percentage (0-100) of required skills match
+3. experience_match: Percentage (0-100) of experience level match
+
+Output MUST be JSON with ONLY these 3 keys. No explanations. No markdown.
+
+<JOB_REQUIREMENTS>
+{json.dumps(job_requirements, indent=2)}
+
+<CANDIDATE_PROFILE>
+{json.dumps(candidate_profile, indent=2)}
+
+<EXAMPLE_RESPONSE>
+{{"overall_match":90,
+  "skill_match": 85,
+  "experience_match": 90,
+}}
+</INSTRUCTIONS>
+"""
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a scoring machine. Return ONLY JSON with 3 numeric values."
+        },
+        {"role": "user", "content": prompt}
+    ]
+
+    try:
+        completion = client.chat.completions.create(
+            model="llama3-70b-8192",
+            messages=messages,
+            temperature=0.3,
+            max_tokens=150,
+            response_format={"type": "json_object"},
+            stream=False
+        )
+        
+        return json.loads(completion.choices[0].message.content.strip())
+    except Exception as e:
+        raise Exception(f"Scoring error: {str(e)}")

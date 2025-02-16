@@ -7,15 +7,13 @@ from routes.history import router as history_router
 
 app = FastAPI()
 
-# Add CORS middleware with all origins allowed
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins
+    allow_origins=["http://localhost:3000"],  # Frontend origin
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 app.include_router(auth_router, prefix="/auth")
 app.include_router(questions_router, prefix="/questions")
 app.include_router(report_router, prefix="/report")

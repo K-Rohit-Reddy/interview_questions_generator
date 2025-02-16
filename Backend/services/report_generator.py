@@ -1,6 +1,6 @@
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, HRFlowable, KeepTogether
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.units import inch
@@ -10,27 +10,27 @@ def header_footer(canvas, doc):
     canvas.saveState()
     width, height = letter
 
-    # Header with brand logo style matching the web header
+    # Header with brand logo
     canvas.setFillColor(colors.black)
     canvas.setFont("Helvetica-Bold", 18)
     canvas.drawString(inch, height - 0.75 * inch, "InterviewPro")
     canvas.setFont("Helvetica", 12)
     canvas.setFillColor(colors.gray)
-    canvas.drawString(inch + 110, height - 0.75 * inch, "AI")  # Position AI next to InterviewPro
+    canvas.drawString(inch + 110, height - 0.75 * inch, "AI")
     
     # Separator line
     canvas.setLineWidth(1)
-    canvas.setStrokeColor(colors.HexColor("#E5E7EB"))  # Lighter gray for the line
+    canvas.setStrokeColor(colors.HexColor("#E5E7EB"))
     canvas.line(inch, height - inch, width - inch, height - inch)
     
-    # Footer: Centered page number with consistent styling
+    # Footer
     canvas.setFont("Helvetica", 10)
     canvas.setFillColor(colors.grey)
     canvas.drawCentredString(width / 2, 0.75 * inch, f"Page {doc.page}")
     
     canvas.restoreState()
 
-def create_pdf_report(job_id, questions, type, candidate_info=None, answers=None, output_file_path="report.pdf"):
+def create_pdf_report(job_id, questions, type, candidate_info=None, match_score=None, answers=None, output_file_path="report.pdf"):
     doc = SimpleDocTemplate(
         output_file_path,
         pagesize=letter,
@@ -42,118 +42,107 @@ def create_pdf_report(job_id, questions, type, candidate_info=None, answers=None
     
     styles = getSampleStyleSheet()
     
-    # Title style (big, bold and in brand color)
+    # Styles
     title_style = ParagraphStyle(
         'TitleStyle',
         parent=styles['Title'],
         fontName="Helvetica-Bold",
-        fontSize=28,
-        textColor=colors.HexColor("#2980B9"),
+        fontSize=24,
+        textColor=colors.black,
         alignment=TA_CENTER,
-        spaceAfter=12
+        spaceAfter=30
     )
     
-    # Subtitle style (subdued tone for clarity)
-    subtitle_style = ParagraphStyle(
-        'SubtitleStyle',
-        parent=styles['Title'],
-        fontName="Helvetica",
-        fontSize=16,
-        textColor=colors.HexColor("#7F8C8D"),
-        alignment=TA_CENTER,
-        spaceAfter=24
-    )
-    
-    # Section heading style with a subtle background highlight
     heading_style = ParagraphStyle(
         'HeadingStyle',
-        parent=styles['Heading2'],
+        parent=styles['Heading1'],
         fontName="Helvetica-Bold",
         fontSize=14,
-        textColor=colors.HexColor("#2C3E50"),
-        backColor=colors.HexColor("#ECF0F1"),
-        alignment=TA_LEFT,
-        spaceBefore=16,
-        spaceAfter=8,
-        leftIndent=4,
-        leading=16
-    )
-    
-    # Normal style for candidate details and job ID
-    normal_style = ParagraphStyle(
-        'NormalStyle',
-        parent=styles['Normal'],
-        fontName="Helvetica",
-        fontSize=12,
         textColor=colors.black,
-        leading=16,
-        spaceAfter=12
+        spaceBefore=20,
+        spaceAfter=10
     )
     
-    # Style for each interview question
     question_style = ParagraphStyle(
         'QuestionStyle',
-        parent=styles['Normal'],
+        parent=styles['BodyText'],
         fontName="Helvetica-Bold",
         fontSize=12,
-        textColor=colors.HexColor("#34495E"),
-        spaceBefore=12,
-        spaceAfter=4,
+        textColor=colors.HexColor("#1F2937"),
+        spaceAfter=6,
+        leftIndent=0,
+        bulletIndent=0
     )
     
-    # Updated style for the corresponding answer text (now using a normal font)
     answer_style = ParagraphStyle(
         'AnswerStyle',
-        parent=styles['Normal'],
-        fontName="Helvetica",
+        parent=styles['BodyText'],
+        fontName="Helvetica-Oblique",
         fontSize=12,
-        textColor=colors.HexColor("#34495E"),
+        textColor=colors.HexColor("#4B5563"),
+        spaceBefore=4,
         leftIndent=20,
-        spaceBefore=2,
-        spaceAfter=12,
+        leading=14,
+        alignment=TA_LEFT
     )
     
     elements = []
     
-    # Report title and subtitle - Updated to be more focused
-    elements.append(Paragraph(type+" Interview Assessment", title_style))
-    elements.append(Paragraph(f"Generated on {datetime.now().strftime('%B %d, %Y')}", subtitle_style))
-    elements.append(Spacer(1, 12))
-    elements.append(HRFlowable(width="100%", thickness=1, lineCap='round', color=colors.HexColor("#BDC3C7"), spaceBefore=10, spaceAfter=10))
+    # Title
+    elements.append(Paragraph(f"{type} Interview Assessment", title_style))
+    elements.append(Paragraph(f"Generated on {datetime.now().strftime('%B %d, %Y')}", answer_style))
+    elements.append(Spacer(1, 20))
     
-    # Candidate Information Section
+    # Match Score Section - Styled like the image
+    if match_score:
+        elements.append(Paragraph("Match Analysis", heading_style))
+        elements.append(Spacer(1, 10))
+        
+        match_table_data = [
+            [
+                Paragraph(f"<b>{match_score['overall_match']}%</b><br/>Overall Match", answer_style),
+                Paragraph(f"<b>{match_score['skill_match']}%</b><br/>Skills Match", answer_style),
+                Paragraph(f"<b>{match_score['experience_match']}%</b><br/>Experience Match", answer_style)
+            ]
+        ]
+        match_table = Table(match_table_data, colWidths=[2 * inch] * 3, hAlign='CENTER')
+        match_table.setStyle(TableStyle([
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+            ('TEXTCOLOR', (0, 0), (-1, -1), colors.black),
+            ('BACKGROUND', (0, 0), (-1, -1), colors.whitesmoke),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey)
+        ]))
+        
+        elements.append(match_table)
+        elements.append(Spacer(1, 20))
+    
+    # Candidate Information
     if candidate_info:
         elements.append(Paragraph("Candidate Information", heading_style))
-        candidate_details = []
-        if isinstance(candidate_info, dict):
-            for key, value in candidate_info.items():
-                # If the value is a list (e.g., education or skills), join items nicely.
-                if isinstance(value, list):
-                    value = ", ".join(value)
-                candidate_details.append(f"<b>{key.capitalize()}:</b> {value}")
-        else:
-            candidate_details.append(str(candidate_info))
-        elements.append(Paragraph("<br/>".join(candidate_details), normal_style))
-        elements.append(Spacer(1, 12))
+        elements.append(Spacer(1, 10))
+        
+        candidate_details = [
+            f"Name: {candidate_info.get('candidate_name', 'N/A')}",
+            f"Email: {candidate_info.get('contact_info', {}).get('email', 'N/A')}",
+            f"Phone: {candidate_info.get('contact_info', {}).get('phone', 'N/A')}",
+            f"Experience: {candidate_info.get('experience_years', 'N/A')} years",
+            f"Skills: {', '.join(candidate_info.get('skills', []))}"
+        ]
+        
+        elements.append(Paragraph("<br/>".join(candidate_details), answer_style))
+        elements.append(Spacer(1, 20))
     
-    # Job ID Section
-    elements.append(Paragraph(f"<b>Job ID:</b> {job_id}", normal_style))
-    elements.append(Spacer(1, 12))
+    # Questions and Answers (Improved formatting)
+    elements.append(Paragraph("Interview Questions & Answers", heading_style))
+    elements.append(Spacer(1, 10))
     
-    # Interview Questions and Answers Section
-    elements.append(Paragraph("Interview Questions", heading_style))
+    if isinstance(questions, list):
+        for i, (question, answer) in enumerate(zip(questions, answers or []), 1):
+            elements.append(Paragraph(f"{i}. {question}", question_style))
+            elements.append(Paragraph(f"<font color='#3B82F6'>Answer:</font> {answer}", answer_style))
+            elements.append(Spacer(1, 15))
     
-    if isinstance(questions, list) and questions:
-        for i, question in enumerate(questions, start=1):
-            qa_flowables = []
-            qa_flowables.append(Paragraph(f"{i}. {question}", question_style))
-            if answers and i <= len(answers):
-                qa_flowables.append(Paragraph(f"Answer: {answers[i-1]}", answer_style))
-            # Wrap question and answer pair to prevent splitting across pages
-            elements.append(KeepTogether(qa_flowables))
-    else:
-        elements.append(Paragraph("No questions available.", normal_style))
-    
-    # Build PDF with header and footer on each page
+    # Build PDF
     doc.build(elements, onFirstPage=header_footer, onLaterPages=header_footer)
     return output_file_path

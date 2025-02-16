@@ -30,9 +30,7 @@ function App() {
           element={
             isAuthenticated ? 
               <Navigate to="/dashboard" /> : 
-              <Layout showHeader={false}>
                 <AuthForm onLoginSuccess={handleLogin} />
-              </Layout>
           } 
         />
         <Route 

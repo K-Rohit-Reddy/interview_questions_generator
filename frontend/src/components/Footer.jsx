@@ -11,8 +11,8 @@ const Footer = () => {
           </div>
           
           <div className="mt-4 md:mt-0 flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-6">
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-900">Privacy Policy</a>
-            <a href="#" className="text-sm text-gray-500 hover:text-gray-900">Terms of Service</a>
+            <a href="/privacy" className="text-sm text-gray-500 hover:text-gray-900">Privacy Policy</a>
+            <a href="/terms" className="text-sm text-gray-500 hover:text-gray-900">Terms of Service</a>
             <span className="text-sm text-gray-500">© {currentYear} InterviewPro AI. All rights reserved.</span>
           </div>
         </div>

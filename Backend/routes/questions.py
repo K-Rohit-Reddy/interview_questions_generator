@@ -1,6 +1,6 @@
 import uuid
 from fastapi import APIRouter, Form, HTTPException, UploadFile, File
-from services.question_generator import generate_interview_questions
+from services.question_generator import generate_interview_questions, calculate_matching_score
 from services.resume_parser import parse_resume
 from database import history_collection
 from datetime import datetime
@@ -18,10 +18,22 @@ async def generate_questions(
     candidate_resume: UploadFile = File(...)
 ):
     try:
+        # Parse competencies and resume
         competencies_list = [c.strip() for c in competencies.split(",")]
         resume_info = await parse_resume(candidate_resume)
         
-        # Generate questions using the resume info
+        # Calculate matching score
+        job_requirements = {
+            "title": job_title,
+            "description": job_description,
+            "experience_level": experience_level,
+            "competencies": competencies_list,
+            "interview_type": interview_type
+        }
+        
+        match_score = await calculate_matching_score(job_requirements, resume_info)
+        
+        # Generate questions
         questions = await generate_interview_questions(
             job_title,
             job_description,
@@ -31,12 +43,12 @@ async def generate_questions(
             resume_info
         )
         
-        if isinstance(questions, dict):  # error returned
+        if isinstance(questions, dict):
             raise HTTPException(status_code=500, detail=questions.get("error"))
         
         job_id = str(uuid.uuid4())
         
-        # Create history entry with candidate info
+        # Create history entry
         history_entry = {
             "job_id": job_id,
             "user_email": user_email,
@@ -46,14 +58,8 @@ async def generate_questions(
             "competencies": competencies_list,
             "interview_type": interview_type,
             "questions": questions,
-            "candidate_info": {
-                "name": resume_info.get('candidate_name', 'Not specified'),
-                "contact_info": resume_info.get('contact_info', {}),
-                "experience_years": resume_info.get('experience_years', 'Not specified'),
-                "education": resume_info.get('education', []),
-                "skills": resume_info.get('skills', []),
-                "professional_summary": resume_info.get('professional_summary', '')
-            },
+            "candidate_info": resume_info,
+            "match_score": match_score,
             "timestamp": datetime.utcnow().isoformat()
         }
         
@@ -62,7 +68,8 @@ async def generate_questions(
         return {
             "job_id": job_id,
             "questions": questions,
-            "candidate_info": history_entry["candidate_info"]
+            "candidate_info": resume_info,
+            "match_score": match_score
         }
         
     except Exception as e:

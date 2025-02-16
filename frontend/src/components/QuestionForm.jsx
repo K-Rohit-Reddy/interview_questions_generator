@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Download } from 'lucide-react';
 import LoadingAnimation from './LoadingAnimation';
-import QuestionDisplay from './QuestionDisplay';  // Import the separate component
+import QuestionDisplay from './QuestionDisplay';
 
 const QuestionForm = () => {
+  const [showForm, setShowForm] = useState(true);
   const [formData, setFormData] = useState({
     jobTitle: '',
     jobDescription: '',
@@ -18,14 +18,17 @@ const QuestionForm = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [questions, setQuestions] = useState(null);
-  const [jobId, setJobId] = useState(null);  // Add this state
-  const [showModal, setShowModal] = useState(false);  // State to control modal visibility
-  const [candidateInfo, setCandidateInfo] = useState(null); // Add this state
+  const [jobId, setJobId] = useState(null);
+  const [candidateInfo, setCandidateInfo] = useState(null);
+  const [matchScore, setMatchScore] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    // Hide the form immediately and scroll to the top
+    setShowForm(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     try {
       const formDataObj = new FormData();
@@ -50,59 +53,72 @@ const QuestionForm = () => {
       }
 
       const data = await response.json();
-      if (data && data.questions && data.candidate_info) {
+      if (data && data.questions) {
         setQuestions(data.questions);
         setJobId(data.job_id);
-        setCandidateInfo(data.candidate_info); // Store the complete candidate info
+        setCandidateInfo(data.candidate_info);
+        setMatchScore(data.match_score);
       } else {
         throw new Error('Invalid response format');
       }
     } catch (err) {
       setError(err.message);
+      // In case of error, show the form again so the user can retry
+      setShowForm(true);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDownload = async (includeAnswers) => {
-    try {
-      const userEmail = localStorage.getItem('userEmail');
-      const response = await fetch(
-        `http://localhost:8000/report/${jobId}?user_email=${userEmail}&include_answers=${includeAnswers}`
-      );
-      
-      if (!response.ok) throw new Error('Failed to download report');
-      
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `interview_questions_${jobId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    } catch (err) {
-      setError('Failed to download PDF. Please try again.');
-      console.error('Download failed:', err);
-    }
-  };
-
-  const promptDownload = () => {
-    setShowModal(true);
-  };
-
-  const handleModalClose = (includeAnswers) => {
-    setShowModal(false);
-    if (includeAnswers !== null) {
-      handleDownload(includeAnswers);
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto space-y-8">
-        {!loading && !questions && (
+        {/* Centered loading animation positioned toward the top */}
+        {loading && (
+          <div className="flex justify-center items-start min-h-screen pt-10">
+            <LoadingAnimation />
+          </div>
+        )}
+
+        {/* Display error message if any */}
+        {error && (
+          <div className="mb-4 p-2 text-sm text-red-600 bg-red-50 rounded border border-red-200">
+            {error}
+          </div>
+        )}
+
+        {/* Question Display Section */}
+        {questions && !loading && (
+          <QuestionDisplay 
+            questions={questions}
+            jobDetails={{
+              jobTitle: formData.jobTitle,
+              jobDescription: formData.jobDescription,
+              experienceLevel: formData.experienceLevel,
+              competencies: formData.competencies,
+              interviewType: formData.interviewType
+            }}
+            jobId={jobId}
+            candidateInfo={{
+              ...candidateInfo,
+              education: Array.isArray(candidateInfo?.education) 
+                ? candidateInfo.education 
+                : candidateInfo?.education 
+                  ? [{ degree: candidateInfo.education }]
+                  : [],
+              experience_years: candidateInfo?.experience_years || 0,
+              skills: candidateInfo?.skills || [],
+              name: candidateInfo?.name || 'N/A',
+              contact_info: candidateInfo?.contact_info || {}
+            }}
+            matchScore={matchScore}
+            timestamp={new Date().toISOString()}
+            showInitialPreview={false}
+          />
+        )}
+
+        {/* Form Section */}
+        {showForm && !loading && !questions && (
           <Card className="w-full">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center">
@@ -110,11 +126,6 @@ const QuestionForm = () => {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {error && (
-                <div className="mb-4 p-2 text-sm text-red-600 bg-red-50 rounded border border-red-200">
-                  {error}
-                </div>
-              )}
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">
@@ -123,7 +134,9 @@ const QuestionForm = () => {
                   <Input
                     required
                     value={formData.jobTitle}
-                    onChange={(e) => setFormData({...formData, jobTitle: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, jobTitle: e.target.value })
+                    }
                     placeholder="e.g. Senior Software Engineer"
                   />
                 </div>
@@ -135,7 +148,9 @@ const QuestionForm = () => {
                   <textarea
                     required
                     value={formData.jobDescription}
-                    onChange={(e) => setFormData({...formData, jobDescription: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, jobDescription: e.target.value })
+                    }
                     className="w-full px-3 py-2 border rounded-md"
                     rows={4}
                     placeholder="Enter detailed job description"
@@ -149,7 +164,9 @@ const QuestionForm = () => {
                   <select
                     required
                     value={formData.experienceLevel}
-                    onChange={(e) => setFormData({...formData, experienceLevel: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, experienceLevel: e.target.value })
+                    }
                     className="w-full px-3 py-2 border rounded-md"
                   >
                     <option value="">Select experience level</option>
@@ -166,7 +183,9 @@ const QuestionForm = () => {
                   <Input
                     required
                     value={formData.competencies}
-                    onChange={(e) => setFormData({...formData, competencies: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, competencies: e.target.value })
+                    }
                     placeholder="e.g. Python, React, AWS"
                   />
                 </div>
@@ -178,7 +197,9 @@ const QuestionForm = () => {
                   <select
                     required
                     value={formData.interviewType}
-                    onChange={(e) => setFormData({...formData, interviewType: e.target.value})}
+                    onChange={(e) =>
+                      setFormData({ ...formData, interviewType: e.target.value })
+                    }
                     className="w-full px-3 py-2 border rounded-md"
                   >
                     <option value="">Select interview type</option>
@@ -210,48 +231,6 @@ const QuestionForm = () => {
               </form>
             </CardContent>
           </Card>
-        )}
-
-        {loading && <LoadingAnimation />}
-
-        {questions && !loading && (
-          <QuestionDisplay 
-            questions={questions}
-            jobDetails={{
-              jobTitle: formData.jobTitle,
-              jobDescription: formData.jobDescription,
-              experienceLevel: formData.experienceLevel,
-              competencies: formData.competencies,
-              interviewType: formData.interviewType
-            }}
-            jobId={jobId}
-            candidateInfo={candidateInfo} // Use the parsed candidate info from backend
-            timestamp={new Date().toISOString()}
-            showInitialPreview={true}
-          />
-        )}
-
-        {showModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white rounded-lg p-6 w-96">
-              <h3 className="text-xl font-semibold mb-4">Include Answers?</h3>
-              <p className="text-gray-600 mb-6">Do you want to include answers in the report?</p>
-              <div className="flex justify-end gap-4">
-                <Button
-                  onClick={() => handleModalClose(false)}
-                  className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300"
-                >
-                  No
-                </Button>
-                <Button
-                  onClick={() => handleModalClose(true)}
-                  className="bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800"
-                >
-                  Yes
-                </Button>
-              </div>
-            </div>
-          </div>
         )}
       </div>
     </div>
