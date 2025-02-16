@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import config from '../config';
+
 import { useNavigate } from 'react-router-dom';
 import { Button } from "./ui/button";
 import Header from './Header';
@@ -21,7 +23,8 @@ const InterviewHistory = ({ onLogout }) => {
           navigate('/login');
           return;
         }
-        const response = await fetch(`https://interviewquestionsgenerator-production.up.railway.app/history/${userEmail}`, {
+        const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.history.get}/${userEmail}`, {
+
 
           headers: { 'Authorization': `Bearer ${token}` }
         });

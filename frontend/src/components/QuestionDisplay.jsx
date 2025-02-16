@@ -11,6 +11,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "./ui/dialog";
+import config from '../config';
 
 const CircularProgress = ({ percentage, color, label, animateCircles, animationKey }) => (
   <div className="flex flex-col items-center">
@@ -91,8 +92,7 @@ const QuestionDisplay = ({
         throw new Error('Missing required information for download');
       }
       const response = await fetch(
-        `https://interviewquestionsgenerator-production.up.railway.app/report/${jobId}?user_email=${encodeURIComponent(userEmail)}&include_answers=${includeAnswers}`,
-
+        `${config.api.baseUrl}${config.api.endpoints.report.get}/${jobId}?user_email=${encodeURIComponent(userEmail)}&include_answers=${includeAnswers}`,
         {
           method: 'GET',
           headers: {
@@ -136,7 +136,7 @@ const QuestionDisplay = ({
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('User not authenticated');
-      const endpoint = `https://interviewquestionsgenerator-production.up.railway.app/history/${deleteId || jobId}`;
+      const endpoint = `${config.api.baseUrl}${config.api.endpoints.history.get}/${deleteId || jobId}`;
 
       const response = await fetch(endpoint, {
         method: 'DELETE',
