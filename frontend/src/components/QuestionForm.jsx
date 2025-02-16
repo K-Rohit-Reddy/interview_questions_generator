@@ -39,7 +39,8 @@ const QuestionForm = () => {
       formDataObj.append('interview_type', formData.interviewType);
       if (file) formDataObj.append('candidate_resume', file);
 
-      const response = await fetch('http://localhost:8000/questions/generate_questions', {
+      const response = await fetch('https://interviewquestionsgenerator-production.up.railway.app/questions/generate_questions', {
+
         method: 'POST',
         body: formDataObj,
       });

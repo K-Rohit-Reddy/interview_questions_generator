@@ -1,13 +1,14 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import InfoHeader from './InfoHeader';
 import { useNavigate } from 'react-router-dom';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
-// ------------------
-// LoginForm Component
-// ------------------
+// Replace this with your actual hCaptcha site key
+const HCAPTCHA_SITE_KEY = '3a882fc2-5b92-4330-9e9a-01e47348d29c';
+
 export const LoginForm = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -16,16 +17,24 @@ export const LoginForm = ({ onLoginSuccess }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [hcaptchaToken, setHcaptchaToken] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
+    if (!hcaptchaToken) {
+      setError('Please complete the captcha');
+      setLoading(false);
+      return;
+    }
+
     try {
       const formDataObj = new FormData();
       formDataObj.append('email', formData.email);
       formDataObj.append('password', formData.password);
+      formDataObj.append('hcaptcha_token', hcaptchaToken);
 
       const response = await fetch('http://localhost:8000/auth/login', {
         method: 'POST',
@@ -37,7 +46,6 @@ export const LoginForm = ({ onLoginSuccess }) => {
         throw new Error(data.detail || 'Something went wrong');
       }
 
-      // Store token and email
       localStorage.setItem('token', data.token);
       localStorage.setItem('userEmail', formData.email);
       onLoginSuccess && onLoginSuccess();
@@ -57,6 +65,8 @@ export const LoginForm = ({ onLoginSuccess }) => {
 
   return (
     <>
+    <br />
+    <br />
       <InfoHeader />
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md p-6 shadow-xl">
@@ -102,10 +112,17 @@ export const LoginForm = ({ onLoginSuccess }) => {
                   disabled={loading}
                 />
               </div>
+              <div className="flex justify-center my-4">
+                <HCaptcha
+                  sitekey={HCAPTCHA_SITE_KEY}
+                  onVerify={(token) => setHcaptchaToken(token)}
+                  onExpire={() => setHcaptchaToken('')}
+                />
+              </div>
               <Button
                 type="submit"
                 className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
-                disabled={loading}
+                disabled={loading || !hcaptchaToken}
               >
                 {loading ? 'Processing...' : 'Login'}
               </Button>
@@ -130,9 +147,6 @@ export const LoginForm = ({ onLoginSuccess }) => {
   );
 };
 
-// ------------------
-// SignupForm Component
-// ------------------
 export const SignupForm = ({ onSignupSuccess }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -143,13 +157,13 @@ export const SignupForm = ({ onSignupSuccess }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [hcaptchaToken, setHcaptchaToken] = useState('');
 
-  // Redirect after successful signup
   useEffect(() => {
     if (isSuccess) {
       const timer = setTimeout(() => {
         navigate('/login');
-      }, 3000); // Redirect after 3 seconds
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [isSuccess, navigate]);
@@ -160,6 +174,12 @@ export const SignupForm = ({ onSignupSuccess }) => {
     setIsSuccess(false);
     setLoading(true);
 
+    if (!hcaptchaToken) {
+      setError('Please complete the captcha');
+      setLoading(false);
+      return;
+    }
+
     try {
       if (formData.password !== formData.confirmPassword) {
         throw new Error('Passwords do not match');
@@ -168,6 +188,7 @@ export const SignupForm = ({ onSignupSuccess }) => {
       const formDataObj = new FormData();
       formDataObj.append('email', formData.email);
       formDataObj.append('password', formData.password);
+      formDataObj.append('hcaptcha_token', hcaptchaToken);
 
       const response = await fetch('http://localhost:8000/auth/signup', {
         method: 'POST',
@@ -179,7 +200,6 @@ export const SignupForm = ({ onSignupSuccess }) => {
         throw new Error(data.detail || 'Something went wrong');
       }
 
-      // Signup succeeded
       setIsSuccess(true);
       setError('Account created successfully! Redirecting to login...');
       onSignupSuccess && onSignupSuccess();
@@ -205,6 +225,8 @@ export const SignupForm = ({ onSignupSuccess }) => {
 
   return (
     <>
+    <br />
+    <br />
       <InfoHeader />
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md p-6 shadow-xl">
@@ -269,10 +291,17 @@ export const SignupForm = ({ onSignupSuccess }) => {
                   disabled={loading}
                 />
               </div>
+              <div className="flex justify-center my-4">
+                <HCaptcha
+                  sitekey={HCAPTCHA_SITE_KEY}
+                  onVerify={(token) => setHcaptchaToken(token)}
+                  onExpire={() => setHcaptchaToken('')}
+                />
+              </div>
               <Button
                 type="submit"
                 className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
-                disabled={loading || formData.password !== formData.confirmPassword}
+                disabled={loading || formData.password !== formData.confirmPassword || !hcaptchaToken}
               >
                 {loading ? 'Processing...' : 'Sign Up'}
               </Button>
