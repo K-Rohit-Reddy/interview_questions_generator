@@ -121,7 +121,7 @@ Output MUST be JSON with ONLY these 3 keys. No explanations. No markdown.
 
     try:
         completion = client.chat.completions.create(
-            model="llama3-70b-8192",
+            model="llama-3.3-70b-versatile",
             messages=messages,
             temperature=0.3,
             max_tokens=150,

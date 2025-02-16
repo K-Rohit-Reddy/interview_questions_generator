@@ -1,79 +1,43 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
-import WorkflowDiagram from './WorkflowDiagram';
 
 const LandingPage = ({ onStartClick }) => {
-  const features = [
-    {
-      title: "AI-Powered Questions",
-      description: "Generate relevant interview questions using advanced AI algorithms",
-      icon: "⚡"
-    },
-    {
-      title: "Resume Analysis",
-      description: "Extract key information from candidate resumes automatically",
-      icon: "📄"
-    },
-    {
-      title: "Customizable Templates",
-      description: "Choose from different interview types and experience levels",
-      icon: "🎯"
-    },
-    {
-      title: "Interview History",
-      description: "Access your past interview question sets and reports",
-      icon: "📚"
-    }
-  ];
-
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center space-y-6">
-            <h1 className="text-5xl font-bold text-gray-900">
-              Generate Perfect Interview Questions
-            </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Create tailored interview questions based on job requirements and candidate profiles in seconds
-            </p>
-            <Button
-              onClick={onStartClick}
-              className="bg-black text-white px-8 py-4 text-lg rounded-lg hover:bg-gray-800 transition-all transform hover:scale-105"
-            >
-              Start Generating Questions
-            </Button>
-          </div>
-        </div>
-      </section>
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-50 to-white">
+      {/* Creative Background SVG */}
+      <svg
+        className="absolute top-0 left-1/2 transform -translate-x-1/2 opacity-10 pointer-events-none animate-pulse-slow"
+        width="1000"
+        height="800"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#e0f2fe" />
+          </linearGradient>
+        </defs>
+        <circle cx="500" cy="400" r="400" fill="url(#bgGradient)" />
+      </svg>
 
-      {/* Features Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="hover:shadow-xl transition-all transform hover:-translate-y-1">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-3 text-2xl">
-                    <span className="text-3xl">{feature.icon}</span>
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 text-lg">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Workflow Section */}
-      <WorkflowDiagram />
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center">
+        <h1 className="text-5xl sm:text-6xl font-extrabold text-gray-900">
+          You're One Step Away From
+          <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Revolutionizing Your Hiring Process
+          </span>
+        </h1>
+        <p className="mt-6 text-xl text-gray-700 max-w-xl">
+          Unlock tailored, AI-powered interview questions designed for HR professionals. Streamline your recruitment and build the dream team—fast.
+        </p>
+        <Button
+          onClick={onStartClick}
+          className="mt-10 bg-black text-white px-8 py-4 text-lg rounded-lg hover:bg-gray-800 transition-all transform hover:scale-105"
+        >
+          Transform Your Hiring Today
+        </Button>
+      </div>
     </div>
   );
 };

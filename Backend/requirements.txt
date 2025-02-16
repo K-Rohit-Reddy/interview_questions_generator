@@ -6,9 +6,9 @@ pydantic
 bcrypt
 jwt
 python-multipart
-transformers
 reportlab
 pandas
 python-docx
 PyPDF2
 python-dotenv
+groq

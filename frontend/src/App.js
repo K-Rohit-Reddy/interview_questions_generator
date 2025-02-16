@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import Layout from './components/Layout';
-import AuthForm from './components/AuthForm';
+import { LoginForm, SignupForm } from './components/AuthForm';
 import LandingPage from './components/LandingPage';
+import InfoPage from './components/InfoPage';
 import QuestionForm from './components/QuestionForm';
 import InterviewHistory from './components/InterviewHistory';
 import './App.css';
@@ -30,7 +31,15 @@ function App() {
           element={
             isAuthenticated ? 
               <Navigate to="/dashboard" /> : 
-                <AuthForm onLoginSuccess={handleLogin} />
+              <LoginForm onLoginSuccess={handleLogin} />
+          } 
+        />
+        <Route 
+          path="/signup" 
+          element={
+            isAuthenticated ? 
+              <Navigate to="/dashboard" /> : 
+              <SignupForm onSignupSuccess={() => {}} />
           } 
         />
         <Route 
@@ -63,7 +72,7 @@ function App() {
         />
         <Route 
           path="/" 
-          element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} 
+          element={<InfoPage />} 
         />
       </Routes>
     </Router>

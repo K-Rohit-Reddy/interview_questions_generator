@@ -2,8 +2,10 @@ from fastapi import APIRouter, HTTPException
 from datetime import datetime
 from database import history_collection
 from models import HistoryEntry
+from bson import ObjectId
 
 router = APIRouter()
+
 
 @router.get("/{user_email}")
 async def get_history(user_email: str):
@@ -22,5 +24,17 @@ async def get_history(user_email: str):
             history.append(record)
         
         return history
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.delete("/{entry_id}")
+async def delete_history_entry(entry_id: str):
+    try:
+        # Convert string ID to ObjectId
+        object_id = ObjectId(entry_id)
+        result = await history_collection.delete_one({"_id": object_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Interview not found")
+        return {"detail": "Interview deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

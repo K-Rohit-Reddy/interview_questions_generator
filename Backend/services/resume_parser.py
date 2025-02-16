@@ -43,6 +43,7 @@ You MUST:
    - phone: "xxx-xxx-xxxx" format or empty string
    - skills: minimum 5 items
    - education: array of strings
+6.In the education array, keep the array in a sorted order on the basis of year of completion DESCENDING ORDER.
 
 <PROHIBITIONS>
 - No text outside JSON object

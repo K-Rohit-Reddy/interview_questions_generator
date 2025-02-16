@@ -50,7 +50,7 @@ async def generate_report(
         create_pdf_report(
             job_id=job_id,
             questions=questions,
-            type=history_record["interview_type"],
+            report_type=history_record["interview_type"],
             candidate_info=history_record.get("candidate_info"),
             match_score=history_record.get("match_score"),
             answers=answers if include_answers else None,
