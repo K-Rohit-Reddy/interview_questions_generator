@@ -91,7 +91,8 @@ const QuestionDisplay = ({
         throw new Error('Missing required information for download');
       }
       const response = await fetch(
-        `http://localhost:8000/report/${jobId}?user_email=${encodeURIComponent(userEmail)}&include_answers=${includeAnswers}`,
+        `https://interviewquestionsgenerator-production.up.railway.app/report/${jobId}?user_email=${encodeURIComponent(userEmail)}&include_answers=${includeAnswers}`,
+
         {
           method: 'GET',
           headers: {
@@ -135,7 +136,8 @@ const QuestionDisplay = ({
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('User not authenticated');
-      const endpoint = `http://localhost:8000/history/${deleteId || jobId}`;
+      const endpoint = `https://interviewquestionsgenerator-production.up.railway.app/history/${deleteId || jobId}`;
+
       const response = await fetch(endpoint, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` },

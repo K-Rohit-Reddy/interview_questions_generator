@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, BackgroundTasks
 from fastapi.responses import FileResponse
 from services.report_generator import create_pdf_report
 from services.answer_generator import generate_interview_answers
 from database import history_collection
 import os
 import logging
+import tempfile
 
 router = APIRouter()
 
@@ -12,7 +13,8 @@ router = APIRouter()
 async def generate_report(
     job_id: str, 
     user_email: str, 
-    include_answers: bool = Query(False)
+    include_answers: bool = Query(False),
+    background_tasks: BackgroundTasks = BackgroundTasks()
 ):
     try:
         # Verify the record exists and belongs to the user
@@ -42,11 +44,12 @@ async def generate_report(
                 questions=questions
             )
         
-        # Ensure reports directory exists
-        os.makedirs("reports", exist_ok=True)
-        file_path = f"reports/{job_id}_report.pdf"
-        
-        # Generate the PDF report
+        # Create a temporary file for the PDF report
+        tmp_file = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False)
+        file_path = tmp_file.name
+        tmp_file.close()  # Close the file so the PDF generator can write to it
+
+        # Generate the PDF report and write to the temporary file
         create_pdf_report(
             job_id=job_id,
             questions=questions,
@@ -57,10 +60,13 @@ async def generate_report(
             output_file_path=file_path
         )
         
+        # Schedule deletion of the temporary file after the response is sent
+        background_tasks.add_task(os.remove, file_path)
+        
         return FileResponse(
             file_path,
             media_type='application/pdf',
-            filename=f"interview_report_{job_id}.pdf"
+            filename=f"interviewreport{job_id}.pdf"
         )
         
     except Exception as e:

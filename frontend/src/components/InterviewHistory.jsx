@@ -21,7 +21,8 @@ const InterviewHistory = ({ onLogout }) => {
           navigate('/login');
           return;
         }
-        const response = await fetch(`http://localhost:8000/history/${userEmail}`, {
+        const response = await fetch(`https://interviewquestionsgenerator-production.up.railway.app/history/${userEmail}`, {
+
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (!response.ok) {
