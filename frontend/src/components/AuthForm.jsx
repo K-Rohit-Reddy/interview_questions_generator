@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import config from '../config';
+
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
@@ -36,7 +38,8 @@ export const LoginForm = ({ onLoginSuccess }) => {
       formDataObj.append('password', formData.password);
       formDataObj.append('recaptcha_token', recaptchaToken);
 
-      const response = await fetch('http://localhost:8000/auth/login', {
+      const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.auth.login}`, {
+
         method: 'POST',
         body: formDataObj,
       });
@@ -190,7 +193,8 @@ export const SignupForm = ({ onSignupSuccess }) => {
       formDataObj.append('password', formData.password);
       formDataObj.append('recaptcha_token', recaptchaToken);
 
-      const response = await fetch('http://localhost:8000/auth/signup', {
+      const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.auth.signup}`, {
+
         method: 'POST',
         body: formDataObj,
       });
