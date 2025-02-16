@@ -4,7 +4,7 @@ pymongo
 motor
 pydantic
 bcrypt
-jwt
+PyJWT>=2.0
 python-multipart
 reportlab
 pandas
