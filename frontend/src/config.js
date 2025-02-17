@@ -1,6 +1,6 @@
 const config = {
   api: {
-    baseUrl: 'https://interviewquestionsgenerator-production.up.railway.app',
+    baseUrl: 'https://backend-seven-ruddy-52.vercel.app',
     endpoints: {
       auth: {
         login: '/auth/login',
