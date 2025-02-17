@@ -3,10 +3,8 @@ import config from '../config';
 
 import { useNavigate } from 'react-router-dom';
 import { Button } from "./ui/button";
-import Header from './Header';
 import QuestionDisplay from './QuestionDisplay';
 import LoadingAnimation from './LoadingAnimation';
-import Footer from './Footer';
 
 const InterviewHistory = ({ onLogout }) => {
   const [history, setHistory] = useState([]);
@@ -52,7 +50,6 @@ const InterviewHistory = ({ onLogout }) => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Header onLogout={onLogout} />
         <div className="max-w-6xl mx-auto px-4 py-20">
         <LoadingAnimation message="Fetching Interview History..." />
         </div>
@@ -62,7 +59,6 @@ const InterviewHistory = ({ onLogout }) => {
 
   return (
     <><br /><div className="min-h-screen bg-white">
-      <Header onLogout={onLogout} />
       <div className="max-w-6xl mx-auto px-4 py-20">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Interview History</h1>
@@ -114,7 +110,6 @@ const InterviewHistory = ({ onLogout }) => {
         )}
       </div>
     </div>
-    <Footer />
     </>
   );
 };

@@ -6,6 +6,9 @@ import LandingPage from './components/LandingPage';
 import InfoPage from './components/InfoPage';
 import QuestionForm from './components/QuestionForm';
 import InterviewHistory from './components/InterviewHistory';
+import TermsOfService from './components/termsofservice';
+import PrivacyPolicy from './components/privacypolicy';
+import FeedbackForm from './components/FeedbackForm'; // import your new component
 import './App.css';
 
 function App() {
@@ -26,53 +29,110 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route 
-          path="/login" 
+        {/* Public authentication routes with header buttons hidden */}
+        <Route
+          path="/login"
           element={
-            isAuthenticated ? 
-              <Navigate to="/dashboard" /> : 
-              <LoginForm onLoginSuccess={handleLogin} />
-          } 
+            <Layout
+              isAuthenticated={isAuthenticated}
+              onLogout={handleLogout}
+              headerAuthButtons={false}
+            >
+              {isAuthenticated ? (
+                <Navigate to="/dashboard" />
+              ) : (
+                <LoginForm onLoginSuccess={handleLogin} />
+              )}
+            </Layout>
+          }
         />
-        <Route 
-          path="/signup" 
+        <Route
+          path="/signup"
           element={
-            isAuthenticated ? 
-              <Navigate to="/dashboard" /> : 
-              <SignupForm onSignupSuccess={() => {}} />
-          } 
+            <Layout
+              isAuthenticated={isAuthenticated}
+              onLogout={handleLogout}
+              headerAuthButtons={false}
+            >
+              {isAuthenticated ? (
+                <Navigate to="/dashboard" />
+              ) : (
+                <SignupForm onSignupSuccess={() => {}} />
+              )}
+            </Layout>
+          }
         />
-        <Route 
-          path="/dashboard" 
+
+        {/* Authenticated routes */}
+        <Route
+          path="/dashboard"
           element={
-            isAuthenticated ? 
-              <Layout onLogout={handleLogout}>
-                <LandingPage onStartClick={() => window.location.href = '/generate'} />
-              </Layout> : 
+            isAuthenticated ? (
+              <Layout isAuthenticated={isAuthenticated} onLogout={handleLogout}>
+                <LandingPage onStartClick={() => (window.location.href = '/generate')} />
+              </Layout>
+            ) : (
               <Navigate to="/login" />
-          } 
+            )
+          }
         />
-        <Route 
-          path="/generate" 
+        <Route
+          path="/generate"
           element={
-            isAuthenticated ? 
-              <Layout onLogout={handleLogout}>
+            isAuthenticated ? (
+              <Layout isAuthenticated={isAuthenticated} onLogout={handleLogout}>
                 <QuestionForm />
-              </Layout> : 
+              </Layout>
+            ) : (
               <Navigate to="/login" />
-          } 
+            )
+          }
         />
-        <Route 
-          path="/history" 
+        <Route
+          path="/history"
           element={
-            isAuthenticated ? 
-              <InterviewHistory onLogout={handleLogout} /> : 
+            isAuthenticated ? (
+              <Layout isAuthenticated={isAuthenticated} onLogout={handleLogout}>
+                <InterviewHistory onLogout={handleLogout} />
+              </Layout>
+            ) : (
               <Navigate to="/login" />
-          } 
+            )
+          }
         />
-        <Route 
-          path="/" 
-          element={<InfoPage />} 
+
+        {/* Public informational routes */}
+        <Route
+          path="/terms-of-service"
+          element={
+            <Layout isAuthenticated={isAuthenticated} onLogout={handleLogout}>
+              <TermsOfService />
+            </Layout>
+          }
+        />
+        <Route
+          path="/privacy-policy"
+          element={
+            <Layout isAuthenticated={isAuthenticated} onLogout={handleLogout}>
+              <PrivacyPolicy />
+            </Layout>
+          }
+        />
+        <Route
+          path="/feedback"  // New route for feedback form
+          element={
+            <Layout isAuthenticated={isAuthenticated} onLogout={handleLogout}>
+              <FeedbackForm />
+            </Layout>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            <Layout isAuthenticated={isAuthenticated} onLogout={handleLogout}>
+              <InfoPage />
+            </Layout>
+          }
         />
       </Routes>
     </Router>

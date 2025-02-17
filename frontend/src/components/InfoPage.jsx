@@ -2,8 +2,6 @@ import React, { useMemo } from "react";
 import { Button } from "./ui/button";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import InfoHeader from "./InfoHeader";
-import Footer from "./Footer";
 import WorkflowDiagram from "./WorkflowDiagram";
 
 const FeatureCard = ({ feature, index }) => (
@@ -80,8 +78,6 @@ const InfoPage = () => {
 
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ scrollBehavior: "smooth" }}>
-      <InfoHeader showAuthButtons={true} />
-
       <br />
       {/* Main container with scroll snapping */}
       <main className="relative scroll-snap-type-y-mandatory">
@@ -186,7 +182,6 @@ const InfoPage = () => {
         </section>
       </main>
 
-      <Footer />
     </div>
   );
 };

@@ -4,7 +4,6 @@ import config from '../config';
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
-import InfoHeader from './InfoHeader';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -70,7 +69,6 @@ export const LoginForm = ({ onLoginSuccess }) => {
     <>
     <br />
     <br />
-      <InfoHeader />
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md p-6 shadow-xl">
           <CardHeader>
@@ -231,7 +229,6 @@ export const SignupForm = ({ onSignupSuccess }) => {
     <>
     <br />
     <br />
-      <InfoHeader />
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md p-6 shadow-xl">
           <CardHeader>

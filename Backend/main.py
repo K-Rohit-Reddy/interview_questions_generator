@@ -4,6 +4,7 @@ from routes.auth import router as auth_router
 from routes.questions import router as questions_router
 from routes.report import router as report_router
 from routes.history import router as history_router
+from routes.feedback import router as feedback_router
 from dotenv import load_dotenv
 import os
 app = FastAPI()
@@ -21,6 +22,7 @@ app.include_router(auth_router, prefix="/auth")
 app.include_router(questions_router, prefix="/questions")
 app.include_router(report_router, prefix="/report")
 app.include_router(history_router, prefix="/history")
+app.include_router(feedback_router, prefix="/feedback")
 
 if __name__ == "__main__":
     import uvicorn
