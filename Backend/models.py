@@ -21,4 +21,9 @@ class HistoryEntry(BaseModel):
     job_title: str
     job_id: str
     date: str
-    action: str # "created", "updated", "deleted"
+    action: str 
+
+class FeedbackRequest(BaseModel):
+    name: str
+    email: str
+    message: str
