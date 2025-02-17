@@ -16,7 +16,7 @@ const config = {
         get: '/history'
       },
       feedback:{
-        submit:'/feedback'
+        submit:'/feedback/submit'
       }
     }
   }

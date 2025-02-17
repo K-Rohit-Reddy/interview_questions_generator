@@ -4,7 +4,7 @@ from models import FeedbackRequest
 
 router = APIRouter()
 
-@router.post("/")
+@router.post("/submit")
 async def submit_feedback(feedback: FeedbackRequest):
     feedback_data = feedback.dict()
     try:
