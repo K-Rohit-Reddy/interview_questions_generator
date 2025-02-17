@@ -73,7 +73,7 @@ const FeedbackForm = () => {
                       placeholder="Your feedback..." />
               </div>
 
-              <button type="submit" className="w-full bg-black text-white py-2 rounded-lg">
+              <button type="submit" className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-900 transition-colors">
                   Submit Feedback
               </button>
           </form>
