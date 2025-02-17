@@ -19,21 +19,31 @@ const FeedbackForm = () => {
     }
 
     try {
+      console.log("Submitting feedback...", formData);
       const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.feedback.submit}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error("Failed to submit feedback.");
+      console.log("Response received:", response);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Submission failed:", errorData);
+        throw new Error(errorData.message || "Failed to submit feedback.");
+      }
 
       setSubmitted(true);
       setFormData({ name: "", email: "", message: "" });
+      console.log("Feedback submitted successfully");
 
       setTimeout(() => setSubmitted(false), 5000); // Hide success message after 5s
     } catch (err) {
-      setError("Something went wrong. Please try again.");
+      console.error("Submission error:", err);
+      setError(err.message || "Something went wrong. Please try again.");
     }
+
   };
 
   return (
@@ -63,7 +73,7 @@ const FeedbackForm = () => {
                       placeholder="Your feedback..." />
               </div>
 
-              <button type="submit" className="w-full bg-black text-white py-2 rounded-lg hover:bg-blue-700 transition">
+              <button type="submit" className="w-full bg-black text-white py-2 rounded-lg">
                   Submit Feedback
               </button>
           </form>
