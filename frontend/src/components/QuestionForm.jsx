@@ -70,7 +70,7 @@ const QuestionForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <><br /><br /><br /><br /><div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-6xl mx-auto space-y-8">
         {loading && (
           <div className="flex justify-center items-start min-h-screen pt-10">
@@ -110,8 +110,7 @@ const QuestionForm = () => {
               matchScore={matchScore}
               timestamp={new Date().toISOString()}
               showInitialPreview={false}
-              menuType="button"
-            />
+              menuType="button" />
           </div>
         ) : (
           showForm && !loading && (
@@ -130,8 +129,7 @@ const QuestionForm = () => {
                       value={formData.jobTitle}
                       onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
                       placeholder="e.g. Senior Software Engineer"
-                      className="focus:ring-2 focus:ring-blue-400 transition-all"
-                    />
+                      className="focus:ring-2 focus:ring-blue-400 transition-all" />
                   </div>
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Job Description</label>
@@ -141,8 +139,7 @@ const QuestionForm = () => {
                       onChange={(e) => setFormData({ ...formData, jobDescription: e.target.value })}
                       className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-400 transition-all"
                       rows={4}
-                      placeholder="Enter detailed job description"
-                    />
+                      placeholder="Enter detailed job description" />
                   </div>
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Experience Level</label>
@@ -165,8 +162,7 @@ const QuestionForm = () => {
                       value={formData.competencies}
                       onChange={(e) => setFormData({ ...formData, competencies: e.target.value })}
                       placeholder="e.g. Python, React, AWS"
-                      className="focus:ring-2 focus:ring-blue-400 transition-all"
-                    />
+                      className="focus:ring-2 focus:ring-blue-400 transition-all" />
                   </div>
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-700">Interview Type</label>
@@ -189,8 +185,7 @@ const QuestionForm = () => {
                       required
                       onChange={(e) => setFile(e.target.files[0])}
                       accept=".pdf,.docx"
-                      className="w-full focus:ring-2 focus:ring-blue-400 transition-all"
-                    />
+                      className="w-full focus:ring-2 focus:ring-blue-400 transition-all" />
                   </div>
                   <Button
                     type="submit"
@@ -205,7 +200,7 @@ const QuestionForm = () => {
           )
         )}
       </div>
-    </div>
+    </div></>
   );
 };
 
