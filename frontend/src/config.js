@@ -14,6 +14,9 @@ const config = {
       },
       history: {
         get: '/history'
+      },
+      feedback:{
+        submit:'/feedback'
       }
     }
   }

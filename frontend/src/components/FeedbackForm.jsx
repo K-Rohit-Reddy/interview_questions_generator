@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import config from '../config';
 const FeedbackForm = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
@@ -19,7 +19,7 @@ const FeedbackForm = () => {
     }
 
     try {
-      const response = await fetch("/feedback/submit", {
+      const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.feedback.submit}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
