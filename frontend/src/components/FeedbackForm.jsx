@@ -48,7 +48,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
+    <><br /><br /><br /><br /><br /><div className="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold text-gray-800 mb-4">Send us your Feedback</h2>
 
       {error && <p className="text-red-600 text-sm mb-3">{error}</p>}
@@ -63,8 +63,7 @@ const FeedbackForm = () => {
             value={formData.name}
             onChange={handleChange}
             className="w-full mt-1 p-2 border rounded-lg focus:ring focus:ring-blue-300"
-            placeholder="Your Name"
-          />
+            placeholder="Your Name" />
         </div>
 
         <div>
@@ -75,8 +74,7 @@ const FeedbackForm = () => {
             value={formData.email}
             onChange={handleChange}
             className="w-full mt-1 p-2 border rounded-lg focus:ring focus:ring-blue-300"
-            placeholder="Your Email"
-          />
+            placeholder="Your Email" />
         </div>
 
         <div>
@@ -87,8 +85,7 @@ const FeedbackForm = () => {
             onChange={handleChange}
             className="w-full mt-1 p-2 border rounded-lg focus:ring focus:ring-blue-300"
             rows="4"
-            placeholder="Your feedback..."
-          />
+            placeholder="Your feedback..." />
         </div>
 
         <button
@@ -99,7 +96,7 @@ const FeedbackForm = () => {
           {isSubmitting ? "Submitting..." : "Submit Feedback"}
         </button>
       </form>
-    </div>
+    </div></>
   );
 };
 
