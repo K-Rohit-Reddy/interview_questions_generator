@@ -2,6 +2,7 @@ import Header from './Header';
 import InfoHeader from './InfoHeader';
 import Footer from './Footer';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const Layout = ({
   children,
@@ -23,7 +24,8 @@ const Layout = ({
         {children}
       </main>
       <Footer />
-      <Analytics /> {/* Added here to track all pages */}
+      <Analytics /> {/* Tracks user analytics */}
+      <SpeedInsights /> {/* Tracks performance insights */}
     </div>
   );
 };
