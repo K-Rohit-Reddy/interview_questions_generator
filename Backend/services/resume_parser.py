@@ -11,7 +11,7 @@ import re
 load_dotenv()
 # Initialize Groq client
 client = Groq(
-    api_key=os.getenv("GROQ_API_KEY").strip('"')
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 RESUME_TEMPLATE = {
