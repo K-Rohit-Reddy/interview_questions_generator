@@ -9,7 +9,7 @@ load_dotenv()
 
 # Initialize Groq client with API key from environment variables
 client = Groq(
-    api_key=os.getenv("GROQ_API_KEY").strip('"')
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 async def generate_interview_answers(job_title: str,
@@ -31,6 +31,7 @@ You MUST follow these rules IMPLICITLY:
 3. No markdown, comments, or text outside the array
 4. Strict JSON syntax - no trailing commas
 5. Answers must be specific to these exact requirements:
+6. Answer must be brief, relevant, and professional and should not be like a one word answer.
 
 <JOB_REQUIREMENTS>
 Title: {job_title}
@@ -46,6 +47,7 @@ Type: {interview_type}
 {json.dumps(questions, indent=2)}
 
 <SAMPLE_FORMAT_EXAMPLE>
+Only for FORMAT reference
 [
   "I have extensive experience with {resume_info['skills'][0]}, which aligns well with your need for {competencies[0]}.",
   "In my previous role as a {job_title}, I faced a {experience_level}-level challenge where I...",

@@ -9,7 +9,7 @@ load_dotenv()
 
 # Initialize Groq client with API key from environment variables
 client = Groq(
-    api_key=os.getenv("GROQ_API_KEY").strip('"')
+    api_key=os.getenv("GROQ_API_KEY")
 )
 
 async def generate_interview_questions(job_title: str,
