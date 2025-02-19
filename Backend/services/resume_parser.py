@@ -35,6 +35,7 @@ async def get_resume_summary(text: str) -> Dict[str, Any]:
 You MUST:
 1. Output EXCLUSIVELY a JSON object matching this EXACT structure:
 {json.dumps(RESUME_TEMPLATE, indent=2)}
+NOTE: the values are placeholders and should be replaced with the actual resume data.
 2. Use double quotes ONLY
 3. Maintain all keys exactly as shown
 4. Never include markdown or extra text
