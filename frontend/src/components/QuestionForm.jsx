@@ -179,7 +179,7 @@ const QuestionForm = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Upload Candidate Resume</label>
+                    <label className="block text-sm font-medium text-gray-700">Upload Candidate's Resume</label>
                     <Input
                       type="file"
                       required
