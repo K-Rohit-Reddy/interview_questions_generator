@@ -142,7 +142,7 @@ const QuestionForm = () => {
                       placeholder="Enter detailed job description" />
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Experience Level</label>
+                    <label className="block text-sm font-medium text-gray-700">Experience Level required for Job</label>
                     <select
                       required
                       value={formData.experienceLevel}
@@ -156,7 +156,7 @@ const QuestionForm = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Competencies (comma-separated)</label>
+                    <label className="block text-sm font-medium text-gray-700">Competencies/Skills required for Job (comma-separated)</label>
                     <Input
                       required
                       value={formData.competencies}
@@ -179,7 +179,7 @@ const QuestionForm = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Upload Resume</label>
+                    <label className="block text-sm font-medium text-gray-700">Upload Candidate Resume</label>
                     <Input
                       type="file"
                       required
