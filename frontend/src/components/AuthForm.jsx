@@ -4,10 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { useNavigate } from 'react-router-dom';
-import ReCAPTCHA from 'react-google-recaptcha';
 import { Eye, EyeOff } from "lucide-react";
-
-const RECAPTCHA_SITE_KEY = '6LdtRdkqAAAAALPaCtkcECR330pwY2PJj8jYRnDz';
 
 export const LoginForm = ({ onLoginSuccess }) => {
   const navigate = useNavigate();
@@ -17,7 +14,6 @@ export const LoginForm = ({ onLoginSuccess }) => {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,17 +21,10 @@ export const LoginForm = ({ onLoginSuccess }) => {
     setError('');
     setLoading(true);
 
-    if (!recaptchaToken) {
-      setError('Please complete the captcha');
-      setLoading(false);
-      return;
-    }
-
     try {
       const formDataObj = new FormData();
       formDataObj.append('email', formData.email);
       formDataObj.append('password', formData.password);
-      formDataObj.append('recaptcha_token', recaptchaToken);
 
       const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.auth.login}`, {
         method: 'POST',
@@ -123,17 +112,10 @@ export const LoginForm = ({ onLoginSuccess }) => {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-center my-4">
-                <ReCAPTCHA
-                  sitekey={RECAPTCHA_SITE_KEY}
-                  onChange={(token) => setRecaptchaToken(token)}
-                  onExpired={() => setRecaptchaToken('')}
-                />
-              </div>
               <Button
                 type="submit"
                 className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
-                disabled={loading || !recaptchaToken}
+                disabled={loading}
               >
                 {loading ? 'Processing...' : 'Login'}
               </Button>
@@ -168,7 +150,6 @@ export const SignupForm = ({ onSignupSuccess }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -187,12 +168,6 @@ export const SignupForm = ({ onSignupSuccess }) => {
     setIsSuccess(false);
     setLoading(true);
 
-    if (!recaptchaToken) {
-      setError('Please complete the captcha');
-      setLoading(false);
-      return;
-    }
-
     try {
       if (formData.password !== formData.confirmPassword) {
         throw new Error('Passwords do not match');
@@ -201,7 +176,6 @@ export const SignupForm = ({ onSignupSuccess }) => {
       const formDataObj = new FormData();
       formDataObj.append('email', formData.email);
       formDataObj.append('password', formData.password);
-      formDataObj.append('recaptcha_token', recaptchaToken);
 
       const response = await fetch(`${config.api.baseUrl}${config.api.endpoints.auth.signup}`, {
         method: 'POST',
@@ -325,17 +299,10 @@ export const SignupForm = ({ onSignupSuccess }) => {
                   </button>
                 </div>
               </div>
-              <div className="flex justify-center my-4">
-                <ReCAPTCHA
-                  sitekey={RECAPTCHA_SITE_KEY}
-                  onChange={(token) => setRecaptchaToken(token)}
-                  onExpired={() => setRecaptchaToken('')}
-                />
-              </div>
               <Button
                 type="submit"
                 className="w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800 transition-colors disabled:opacity-50"
-                disabled={loading || formData.password !== formData.confirmPassword || !recaptchaToken}
+                disabled={loading || formData.password !== formData.confirmPassword}
               >
                 {loading ? 'Processing...' : 'Sign Up'}
               </Button>
