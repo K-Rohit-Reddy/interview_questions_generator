@@ -70,7 +70,7 @@ const InterviewHistory = ({ onLogout }) => {
             {error}
           </div>
         )}
-        {history.length == 0 ? (
+        {history.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow-lg">
             <div className="mb-4 text-4xl">📝</div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">No Interview History</h3>

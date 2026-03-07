@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button } from "./ui/button";
 import { Download, MoreVertical, Trash2 } from 'lucide-react';
-import { formatDate } from '../lib/utils';
 import CandidateInfoSection from './CandidateInfoSection';
 import {
   Dialog,
@@ -53,7 +52,7 @@ const QuestionDisplay = ({
   const [showDownloadDialog, setShowDownloadDialog] = useState(false);
   const [error, setError] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [isDeleted] = useState(false);
   const [isExpanded, setIsExpanded] = useState(!showInitialPreview);
   const [showCandidateDetails, setShowCandidateDetails] = useState(false);
   const [showMatchAnalysis, setShowMatchAnalysis] = useState(false);
