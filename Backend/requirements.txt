@@ -12,4 +12,3 @@ python-docx
 PyPDF2
 python-dotenv
 groq
-httpx
